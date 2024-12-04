@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cheer Up Message</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #b0b0b0;
+        font-family: Arial, sans-serif;
+        margin: 0px;
+        padding: 0px;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .message-box,
+      .dialog-box {
+        background-color: #1c1c1c;
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+        color: white;
+        width: 300px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      .divider {
+        height: 1px;
+        background-color: #555555;
+        margin: 0;
+      }
+
+      .ok-button {
+        color: #007bff;
+        font-size: 18px;
+        text-decoration: none;
+        cursor: pointer;
+      }
+
+      .dialog-box {
+        background-color: #1c1c1c;
+        border-radius: 10px;
+        padding: 20px;
+        color: white;
+        width: 300px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        position: relative;
+      }
+
+      .dialog-box .divider {
+        height: 1px;
+        background-color: #555555;
+        margin: 20px 0;
+      }
+
+      .dialog-box .buttons {
+        display: flex;
+        height: 50px; /* Adjust the height as needed */
+        margin-top: 20px;
+        border-top: 1px solid #555; /* Add a dividing line at the top */
+      }
+
+      .dialog-box .buttons button {
+        flex: 1;
+        background-color: transparent;
+        border: none;
+        color: #00f;
+        font-size: 16px;
+        cursor: pointer;
+        padding: 10px;
+        text-align: center;
+      }
+
+      .dialog-box .buttons button:first-child {
+        border-right: 1px solid #555; /* Divider between the buttons */
+      }
+
+      .dialog-box .buttons button:hover {
+        background-color: #ddd;
+        color: #000;
+      }
+
+      .ok-button:hover {
+        color: #ddd;
+      }
+
+      .cheer-box img {
+        width: 100px;
+        height: auto;
+      }
+
+      .cheer-box p {
+        font-size: 16px;
+        margin: 20px 0;
+      }
+
+      .cheer-box button {
+        background-color: transparent;
+        border: none;
+        color: #00f;
+        font-size: 16px;
+        cursor: pointer;
+      }
+
+      /* Existing styles remain unchanged */
+
+      /* Popup animation */
+      @keyframes popup {
+        0% {
+          transform: scale(0.8);
+          opacity: 0;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      /* Apply animation */
+      .popup-effect {
+        animation: popup 0.3s ease-out;
+      }
+
+      .container {
+        position: relative;
+        width: 375px;
+        height: 667px;
+        background-color: black;
+        overflow: hidden;
+      }
+      .background-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .time {
+        position: absolute;
+        top: 30%;
+        width: 100%;
+        text-align: center;
+        color: white;
+        font-size: 48px;
+      }
+      .date {
+        position: absolute;
+        top: 38%; /* Adjusted for more space */
+        width: 100%;
+        text-align: center;
+        color: white;
+        font-size: 18px;
+      }
+
+      .notification {
+        position: absolute;
+        bottom: 300px; /* Moved up */
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90%;
+        background-color: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        animation: popup 0.4s ease-out; /* Adding the pop-up animation */
+      }
+      .notification-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 5px;
+      }
+      .notification-header i {
+        color: #25d366;
+        margin-right: 5px;
+      }
+      .notification-header span {
+        font-size: 14px;
+        color: gray;
+      }
+      .notification-body {
+        font-size: 14px;
+        color: black;
+      }
+      .notification-body strong {
+        font-size: 16px;
+      }
+      .button-new {
+        position: absolute;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: rgba(255, 255, 255, 0.8);
+        border: none;
+        border-radius: 10px;
+        padding: 10px 20px;
+        font-size: 14px;
+        cursor: pointer;
+      }
+
+      .background-image {
+        display: block;
+        width: 100%; /* Default to fill width */
+        height: auto; /* Maintain aspect ratio */
+        object-fit: cover; /* Ensure the image fills its container */
+      }
+
+      /* Styles for mobile devices (less than 768px width) */
+      @media (max-width: 767px) {
+        .container {
+          width: 100%;
+          height: 100vh; /* Full height for mobile */
+          object-fit: cover;
+        }
+        .background-image {
+          width: 100%;
+          height: 100vh; /* Full height for mobile */
+          object-fit: cover;
+        }
+      }
+
+      /* Styles for desktop devices (768px and above) */
+      @media (min-width: 768px) {
+        .container {
+          height: 100vh; /* Full height for desktop */
+          width: 500px; /* Maintain aspect ratio */
+        }
+        .background-image {
+          width: 500px;
+          height: 100vh; /* Full height for mobile */
+          object-fit: cover;
+        }
+      }
+
+      .typing {
+        white-space: pre-wrap;
+        font-family: inherit;
+        line-height: 1.5;
+      }
+
+      .popup {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000; /* Ensure it's above other elements */
+      }
+
+      .popup-card {
+        background-color: white;
+        border-radius: 10px;
+        padding: 20px;
+        width: 90%; /* Gunakan persentase agar responsif */
+        max-width: 400px; /* Tetapkan lebar maksimum */
+        text-align: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      .popup-card h1 {
+        margin-bottom: 10px;
+        font-size: 24px;
+      }
+
+      .popup-card textarea {
+        width: 80%;
+        height: 100px;
+        margin-bottom: 10px;
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+
+      .popup-card button {
+        background-color: black;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+
+      .popup-card button:hover {
+        background-color: #0056b3;
+      }
+
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Audio Element for Background Music -->
+    <audio id="background-audio" loop>
+      <source src="song.mp3" type="audio/mp3" />
+    </audio>
+
+    <!-- Pop Sound Element -->
+    <audio id="pop-sound">
+      <source src="poop.mp3" type="audio/wav" />
+    </audio>
+
+    <audio id="bell">
+      <source src="bell.mp3" type="audio/wav" />
+    </audio>
+
+    <div id="part-1">
+      <!-- First part -->
+      <div class="message-box" id="message-box">
+        <p>Halo bell, lama ngga kelihatan</p>
+        <div style="margin: 20px 0" class="divider"></div>
+        <span class="ok-button" onclick="showDialogBox()">Next</span>
+      </div>
+
+      <!-- Dialog box -->
+      <div class="dialog-box hidden" id="dialog-box">
+        <p>Gimana kabarnya, are u feeling okay?</p>
+        <div class="buttons">
+          <button onclick="showCheerBox()">Nope :(</button>
+          <button onclick="goApaTuh()">Ok :)</button>
+        </div>
+      </div>
+
+      <!-- Cheer up message -->
+      <div class="message-box cheer-box hidden" id="cheer-box-1">
+        <img src="peluk.gif" />
+        <p>
+          Aww! I'll give you a hug.
+          <br />
+          Semangat dong hehehe!
+        </p>
+        <span class="ok-button" onclick="goBack()">Next</span>
+      </div>
+      <div class="message-box cheer-box hidden" id="cheer-box-2">
+        <img src="peluk.gif" />
+        <p>
+          Masak belum semangat?
+          <br />
+          Semangat cuyy XD
+        </p>
+        <span class="ok-button" onclick="goBack1()">Iya :)</span>
+      </div>
+
+      <div class="dialog-box hidden" id="dialog-cheer-box">
+        <p>Gimana udh semangat lagi?</p>
+        <div class="buttons">
+          <button onclick="showCheerBoxnew()">Belum :(</button>
+          <button onclick="goApaTuh1()">Udh :)</button>
+        </div>
+      </div>
+
+      <div class="message-box hidden" id="message-box-apa">
+        <p>Aku mau sampeiin sesuatu nihh</p>
+        <div style="margin: 20px 0" class="divider"></div>
+        <span class="ok-button" onclick="showDialogKepo()">Apa tuh?</span>
+      </div>
+
+      <div class="dialog-box hidden" id="dialog-box-kepo">
+        <p>Kepo yah?</p>
+        <div class="buttons">
+          <button onclick="showDialogKepo1()">IYA</button>
+          <button onclick="showDialogKepo1()">BANGET</button>
+        </div>
+      </div>
+
+      <div class="dialog-box hidden" id="dialog-box-kepo-1">
+        <p>Hahaha okayy deh</p>
+        <div style="margin: 20px 0" class="divider"></div>
+        <span class="ok-button" onclick="showMassages()">Next</span>
+      </div>
+    </div>
+
+    <div class="hidden" id="part-2">
+      <div class="container" id="part-2">
+        <img
+          alt="Background with daisies"
+          class="background-image"
+          src="https://storage.googleapis.com/a1aa/image/FGqoGxtelNz5NquvhBhweM17FTgLusnvflpkBDP7jiQ2zdtnA.jpg"
+        />
+        <div class="time" id="time"></div>
+        <div class="date" id="date"></div>
+        <div style="padding-top: -400px" class="notification">
+          <div class="notification-header">
+            <i class="fab fa-whatsapp"> </i>
+            <span> WHATSAPP </span>
+            <span style="margin-left: auto"> Now </span>
+          </div>
+          <div class="notification-body">
+            <strong> Nann</strong>
+            <br />
+            <br />
+            <span id="typing-text" class="typing"></span>
+          </div>
+        </div>
+        <button style="margin-bottom: 50px" class="button-new">
+          Pesan selanjutnya
+        </button>
+      </div>
+
+      <div class="popup hidden" id="popup">
+        <div class="popup-card">
+          <h1>Pesan Balasan</h1>
+          <br />
+          <textarea
+            id="reply-text"
+            placeholder="Tulis pesan di sini..."
+          ></textarea>
+          <button id="send-button">Kirim</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function updateTimeAndDate() {
+        const now = new Date();
+
+        // Format time as HH:mm
+        const time = now.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+
+        // Format date as Day, DD Month
+        const date = now.toLocaleDateString([], {
+          weekday: "long",
+          day: "numeric",
+          month: "long",
+        });
+
+        // Update the HTML
+        document.getElementById("time").textContent = time;
+        document.getElementById("date").textContent = date;
+      }
+
+      // Initial call
+      updateTimeAndDate();
+
+      // Update every second
+      setInterval(updateTimeAndDate, 1000);
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const texts = [
+          "Ini adalah pesan pertama untuk ditampilkan saat tombol ditekan.",
+          "Ini adalah pesan kedua untuk ditampilkan saat tombol ditekan.",
+          "Ini adalah pesan terakhir.",
+        ];
+
+        const typingElement = document.getElementById("typing-text");
+        const button = document.querySelector(".button-new");
+        const popup = document.getElementById("popup");
+        const sendButton = document.getElementById("send-button");
+
+        let index = 0; // Index karakter saat ini dalam teks
+        let textIndex = 0; // Index teks saat ini dalam array
+
+        // Get the audio element
+        const bellSound = document.getElementById("bell");
+
+        // Type function
+        function type() {
+          if (index < texts[textIndex].length) {
+            typingElement.textContent += texts[textIndex].charAt(index);
+            index++;
+            setTimeout(type, 50); // Adjust typing speed (in milliseconds)
+          }
+        }
+
+        // Reset typing for each new message
+        function resetTyping() {
+          playSound(); // Play sound before typing begins
+          typingElement.textContent = ""; // Clear current text
+          index = 0; // Reset character index
+          type(); // Start typing the current message
+        }
+
+        // Play the sound
+        function playSound() {
+          bellSound.play().catch((e) => {
+            console.error("Failed to play sound:", e);
+          });
+        }
+
+        // Show the popup
+        function showPopup() {
+          popup.classList.remove("hidden");
+        }
+
+        // Initial typing when the page loads
+        resetTyping(); // Call resetTyping here to ensure the first message types out
+
+        // Event listener for the button click
+        button.addEventListener("click", () => {
+          if (textIndex < texts.length - 1) {
+            textIndex++; // Move to the next text
+            resetTyping(); // Reset typing for the next message
+          } else {
+            button.disabled = true; // Disable the button when all texts are completed
+            button.textContent = "Tidak ada pesan lagi"; // Change the button text
+            showPopup(); // Show popup after all texts are completed
+          }
+        });
+
+        // Event listener for the "Send" button in the popup
+        sendButton.addEventListener("click", () => {
+          const replyText = document.getElementById("reply-text").value;
+          if (replyText.trim() === "") {
+            alert("Pesan tidak boleh kosong!"); // Alert if the message is empty
+            return;
+          }
+
+          // WhatsApp phone number
+          const phoneNumber = "+628563880466";
+          // Construct the WhatsApp URL
+          const whatsappURL = `https://wa.me/${phoneNumber.replace(
+            /\D/g,
+            ""
+          )}?text=${encodeURIComponent(replyText)}`;
+
+          // Open WhatsApp in a new tab
+          window.open(whatsappURL, "_blank");
+
+          // Hide the popup after sending the message
+          popup.classList.add("hidden");
+        });
+      });
+
+      const audio = document.getElementById("background-audio");
+      const popSound = document.getElementById("pop-sound");
+
+      // Play background music on interaction
+      document.body.addEventListener("click", () => {
+        if (audio.paused) {
+          audio
+            .play()
+            .catch((error) => console.error("Audio playback failed:", error));
+        }
+      });
+
+      // Play pop sound
+      function playPopSound() {
+        popSound.currentTime = 0; // Reset to the start
+        popSound
+          .play()
+          .catch((error) => console.error("Pop sound playback failed:", error));
+      }
+
+      // Add popup effect and move to next view
+      function showWithEffect(hideId, showId) {
+        const hideElement = document.getElementById(hideId);
+        const showElement = document.getElementById(showId);
+
+        // Hide current element
+        hideElement.classList.add("hidden");
+
+        // Show next element with effect
+        showElement.classList.remove("hidden");
+        showElement.classList.add("popup-effect");
+
+        // Play pop sound
+        playPopSound();
+      }
+
+      // Example button click handlers
+      function showDialogBox() {
+        showWithEffect("message-box", "dialog-box");
+      }
+
+      function showCheerBox() {
+        showWithEffect("dialog-box", "cheer-box-1");
+      }
+
+      function goApaTuh() {
+        showWithEffect("dialog-box", "message-box-apa");
+      }
+
+      function goApaTuh1() {
+        showWithEffect("dialog-cheer-box", "message-box-apa");
+      }
+
+      function showCheerBoxnew() {
+        showWithEffect("dialog-cheer-box", "cheer-box-2");
+      }
+
+      function goBack() {
+        showWithEffect("cheer-box-1", "dialog-cheer-box");
+      }
+
+      function goBack1() {
+        showWithEffect("cheer-box-2", "dialog-cheer-box");
+      }
+
+      function showDialogKepo() {
+        showWithEffect("message-box-apa", "dialog-box-kepo");
+      }
+
+      function showDialogKepo1() {
+        showWithEffect("dialog-box-kepo", "dialog-box-kepo-1");
+      }
+
+      function showMassages() {
+        document.getElementById("bell").play();
+        document.getElementById("part-1").classList.add("hidden");
+        document.getElementById("part-2").classList.remove("hidden");
+      }
+    </script>
+  </body>
+</html>
