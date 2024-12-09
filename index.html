@@ -308,6 +308,8 @@
     </style>
   </head>
   <body>
+
+<div id="actual-content" class="hidden">
     <!-- Audio Element for Background Music -->
     <audio id="background-audio" loop>
       <source src="song.mp3" type="audio/mp3" />
@@ -427,6 +429,42 @@
         </div>
       </div>
     </div>
+</div>
+
+    <script>
+    // Target date and time (GMT+8, 11 December 2024, 00:00)
+    const targetDate = new Date("2024-12-11T00:00:00+08:00");
+    
+    function showContent() {
+      const now = new Date();
+      const currentTime = new Date(
+        now.getUTCFullYear(),
+        now.getUTCMonth(),
+        now.getUTCDate(),
+        now.getUTCHours(),
+        now.getUTCMinutes(),
+        now.getUTCSeconds()
+      );
+
+      // Convert target date to UTC for accurate comparison
+      const targetUTC = new Date(targetDate.toUTCString());
+
+      if (currentTime >= targetUTC) {
+        // Show actual content and hide placeholder
+        document.getElementById("placeholder-message").style.display = "none";
+        document.getElementById("actual-content").classList.remove("hidden");
+      } else {
+        // Keep placeholder visible
+        document.getElementById("placeholder-message").style.display = "block";
+        document.getElementById("actual-content").classList.add("hidden");
+      }
+    }
+
+    // Initial check and periodic check every second
+    showContent();
+    setInterval(showContent, 1000);
+  </script>
+
 
     <script>
       function updateTimeAndDate() {
